@@ -3,7 +3,8 @@ extends KinematicBody2D
 const ACCELERATION = 150
 const MAX_SPEED = 40
 const FRICTION = 150
-const LIGHT_DRAIN = 0.05
+const LIGHT_DRAIN = 0.069 # N O I C E
+const DEFAULT_TINT = 0.27
 const DARK_ADD = LIGHT_DRAIN * 0.183
 enum DIRECTION { UP, DOWN, RIGHT, LEFT}
 var motion = Vector2.ZERO
@@ -14,6 +15,7 @@ var time_now = 0
 var last_direction = 1
 
 func _ready():
+	Global.Player = self
 	$CanvasLayer/EnergyBar.value = ($Light2D.energy / 2) * 100
 	$CanvasLayer/HealthBar.value = 100
 	time_start = OS.get_unix_time()
@@ -69,12 +71,13 @@ func show_game_over():
 func _on_LightTimer_timeout():
 	if($Light2D.energy > 0.0):
 		$Light2D.energy -= LIGHT_DRAIN
+		var c = $Darkness.get_color()
 		if((($Light2D.energy  / 2) * 100) < 70):
-			var c = $Darkness.get_color()
 			c.r -= DARK_ADD
 			c.g -= DARK_ADD
 			c.b -= DARK_ADD
-			$Darkness.set_color(c)
+		print(c.r)
+		$Darkness.set_color(c)
 		$LightTimer.start()
 	else:
 		print("GAME OVER")
@@ -83,10 +86,36 @@ func _on_LightTimer_timeout():
 		$LightTimer.stop()
 		
 	$CanvasLayer/EnergyBar.value = (($Light2D.energy  / 2) * 100)
-	print($CanvasLayer/EnergyBar.value)
+	
 	pass # Replace with function body.
 
 
 func _on_Button_pressed():
 	get_tree().reload_current_scene()
+	pass # Replace with function body.
+
+
+
+	
+const BATTERY_LIFE = LIGHT_DRAIN * 10
+const LIGHT_ADD =  DARK_ADD * 10
+
+func on_enter_area(body):
+	if(body == self):
+		var energy = $Light2D.energy + BATTERY_LIFE
+		if(energy > 2):
+			$Light2D.energy = 2
+		else:
+			$Light2D.energy = energy
+		var c = $Darkness.get_color()
+		if($CanvasLayer/EnergyBar.value < 70):
+			c.r += LIGHT_ADD
+			c.g += LIGHT_ADD
+			c.b += LIGHT_ADD
+		if(c.r > DEFAULT_TINT):
+			c.r = DEFAULT_TINT
+			c.g = DEFAULT_TINT
+			c.b = DEFAULT_TINT
+		$Darkness.set_color(c)
+		print(c.r)
 	pass # Replace with function body.
