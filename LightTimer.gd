@@ -7,5 +7,4 @@ func _init():
 	add_child(timer)
 	timer.autostart = true
 	timer.wait_time = 0.5
-	timer.connect("timeout", self, "_timeout")
 

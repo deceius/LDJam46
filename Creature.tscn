@@ -1,0 +1,98 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://tiles.png" type="Texture" id=1]
+[ext_resource path="res://PlayerDetector.gd" type="Script" id=2]
+[ext_resource path="res://Creature.gd" type="Script" id=3]
+[ext_resource path="res://PlayerAttackingZone.gd" type="Script" id=4]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 120, 8, 8 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 40, 120, 8, 8 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 128, 8, 8 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 40, 128, 8, 8 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "idle",
+"speed": 3.0
+}, {
+"frames": [ SubResource( 3 ), SubResource( 4 ) ],
+"loop": true,
+"name": "walk",
+"speed": 4.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 3, 2 )
+
+[sub_resource type="OccluderPolygon2D" id=7]
+polygon = PoolVector2Array( -3, 0, -3, 4, 3, 4, 3, 0 )
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 23.0
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id=10]
+radius = 5.0
+
+[node name="Creature" type="KinematicBody2D"]
+script = ExtResource( 3 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 5 )
+animation = "walk"
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 2 )
+shape = SubResource( 6 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource( 7 )
+
+[node name="PlayerDetector" type="Area2D" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DetectionCollider" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource( 8 )
+
+[node name="HitBox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="HitBoxCollider" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource( 9 )
+
+[node name="PlayerAttackingZone" type="Area2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="PlayerAttackingCollider" type="CollisionShape2D" parent="PlayerAttackingZone"]
+shape = SubResource( 10 )
+
+[node name="AttackSpeed" type="Timer" parent="PlayerAttackingZone"]
+wait_time = 0.5
+[connection signal="body_entered" from="PlayerDetector" to="PlayerDetector" method="_on_PlayerDetector_body_entered"]
+[connection signal="body_exited" from="PlayerDetector" to="PlayerDetector" method="_on_PlayerDetector_body_exited"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
+[connection signal="area_shape_entered" from="HitBox" to="." method="_on_HitBox_area_shape_entered"]
+[connection signal="body_entered" from="PlayerAttackingZone" to="PlayerAttackingZone" method="_on_PlayerAttackingZone_body_entered"]
+[connection signal="body_exited" from="PlayerAttackingZone" to="PlayerAttackingZone" method="_on_PlayerAttackingZone_body_exited"]
+[connection signal="timeout" from="PlayerAttackingZone/AttackSpeed" to="PlayerAttackingZone" method="_on_AttackSpeed_timeout"]

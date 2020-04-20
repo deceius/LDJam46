@@ -1,0 +1,96 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://m5x7.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://tiles.png" type="Texture" id=2]
+[ext_resource path="res://TitleScreen.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 20
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 8
+font_data = ExtResource( 1 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 144, 24, 16 )
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 0.988
+margin_bottom = -0.0279999
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchor_left = 0.167
+anchor_right = 0.778
+margin_left = -0.0480022
+margin_top = 16.0
+margin_right = -0.0320053
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "LIGHTSTRUCK"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="Button" parent="CanvasLayer"]
+anchor_left = 0.083
+anchor_right = 0.382
+margin_left = 0.0479994
+margin_top = 56.0
+margin_right = -0.00800323
+margin_bottom = 69.0
+custom_fonts/font = SubResource( 2 )
+text = "Start Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsButton" type="Button" parent="CanvasLayer"]
+anchor_left = 0.611
+anchor_right = 0.91
+margin_left = 0.0159988
+margin_top = 56.0
+margin_right = -0.0400085
+margin_bottom = 69.0
+custom_fonts/font = SubResource( 2 )
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchor_left = 0.694
+anchor_right = 0.861
+margin_left = 0.0639954
+margin_top = 28.0
+margin_right = 0.0159912
+margin_bottom = 44.0
+texture = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="CanvasLayer/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/CreditsButton" to="." method="_on_CreditsButton_pressed"]

@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tiles.png" type="Texture" id=1]
+[ext_resource path="res://Light_Batt.png" type="Texture" id=2]
+[ext_resource path="res://Healthpak.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 5.13773
+
+[node name="Healthpak" type="Sprite"]
+position = Vector2( 90, 130 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 72, 8, 8 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Light2D" type="Light2D" parent="."]
+texture = ExtResource( 2 )
+shadow_enabled = true
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

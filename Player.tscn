@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://tiles.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
@@ -7,56 +7,79 @@
 [ext_resource path="res://bars.png" type="Texture" id=5]
 [ext_resource path="res://ebars.png" type="Texture" id=6]
 [ext_resource path="res://m5x7.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://SwordHit.gd" type="Script" id=8]
 
-[sub_resource type="AtlasTexture" id=1]
+[sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 120, 16, 8 )
 
-[sub_resource type="AtlasTexture" id=2]
+[sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 128, 16, 8 )
 
-[sub_resource type="AtlasTexture" id=3]
+[sub_resource type="AtlasTexture" id=15]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 136, 16, 8 )
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 1 )
+region = Rect2( 16, 136, 16, 8 )
+
+[sub_resource type="AtlasTexture" id=17]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 136, 16, 8 )
+
+[sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 1 )
 region = Rect2( 16, 128, 16, 8 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=21]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 120, 16, 8 )
 
-[sub_resource type="AtlasTexture" id=5]
+[sub_resource type="AtlasTexture" id=22]
 atlas = ExtResource( 1 )
 region = Rect2( 16, 120, 16, 8 )
 
-[sub_resource type="AtlasTexture" id=6]
+[sub_resource type="AtlasTexture" id=23]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 120, 16, 8 )
 
-[sub_resource type="SpriteFrames" id=7]
+[sub_resource type="SpriteFrames" id=24]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"frames": [ SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "idle",
 "speed": 3.0
 }, {
-"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 17 ) ],
+"loop": true,
+"name": "attack",
+"speed": 7.0
+}, {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
 "loop": true,
 "name": "walk",
 "speed": 6.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=8]
+[sub_resource type="RectangleShape2D" id=25]
 extents = Vector2( 3.85656, 3.19745 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="RectangleShape2D" id=26]
+extents = Vector2( 2.18892, 2.294 )
+
+[sub_resource type="DynamicFont" id=27]
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 7 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=28]
 size = 12
 font_data = ExtResource( 7 )
 
-[sub_resource type="DynamicFont" id=11]
-size = 9
+[sub_resource type="DynamicFont" id=29]
+size = 6
 font_data = ExtResource( 7 )
 
 [node name="Player" type="KinematicBody2D"]
@@ -64,9 +87,9 @@ position = Vector2( 36.7032, 38.8496 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 7 )
-animation = "walk"
-frame = 1
+frames = SubResource( 24 )
+animation = "attack"
+playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -77,7 +100,7 @@ limit_bottom = 1000
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -0.157997, 0.824444 )
-shape = SubResource( 8 )
+shape = SubResource( 25 )
 
 [node name="Light2D" type="Light2D" parent="."]
 show_behind_parent = true
@@ -94,6 +117,16 @@ shadow_item_cull_mask = 3
 wait_time = 0.5
 autostart = true
 script = ExtResource( 4 )
+
+[node name="SwordHit" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 8 )
+
+[node name="Collision" type="CollisionShape2D" parent="SwordHit"]
+position = Vector2( 5.88, 1.736 )
+shape = SubResource( 26 )
+disabled = true
 
 [node name="Darkness" type="CanvasModulate" parent="."]
 show_behind_parent = true
@@ -125,11 +158,25 @@ __meta__ = {
 
 [node name="GameOverTitle" type="Label" parent="CanvasLayer"]
 visible = false
+anchor_right = 1.036
 margin_top = 17.8089
-margin_right = 144.0
+margin_right = -5.18401
 margin_bottom = 31.8089
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 27 )
 text = "GAME OVER"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PausedLabel" type="Label" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.002
+margin_top = 38.8496
+margin_right = -0.28801
+margin_bottom = 52.8496
+custom_fonts/font = SubResource( 27 )
+text = "PAUSED"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -137,30 +184,49 @@ __meta__ = {
 
 [node name="GameOverSubTitle" type="Label" parent="CanvasLayer"]
 visible = false
+anchor_right = 1.002
 margin_left = 0.281311
 margin_top = 31.3716
-margin_right = 144.281
+margin_right = -0.00700378
 margin_bottom = 60.3716
-custom_fonts/font = SubResource( 10 )
-text = "The shadows consumed you. You are alive for "
+custom_fonts/font = SubResource( 28 )
+text = "The shadows consumed you. You were alive for "
 align = 1
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="CanvasLayer"]
+[node name="Restart" type="Button" parent="CanvasLayer"]
+pause_mode = 2
 visible = false
+anchor_right = 1.0
 margin_left = 45.0
 margin_top = 60.0
-margin_right = 95.0
+margin_right = -49.0
 margin_bottom = 74.0
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 29 )
 shortcut_in_tooltip = false
-text = "Restart Game"
+text = "Back to Title"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pause" type="Button" parent="CanvasLayer"]
+pause_mode = 2
+anchor_right = 1.0
+margin_left = 118.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = 15.0
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 29 )
+shortcut_in_tooltip = false
+text = "Pause"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="timeout" from="LightTimer" to="." method="_on_LightTimer_timeout"]
-[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Pause" to="." method="_on_Pause_pressed"]

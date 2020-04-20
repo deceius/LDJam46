@@ -18,5 +18,5 @@ func _ready():
 
 func _on_Area2D_body_entered(body):
 	player.on_enter_area(body)
-	get_parent().remove_child(self)
+	queue_free()
 	pass # Replace with function body.
